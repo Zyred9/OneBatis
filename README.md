@@ -58,7 +58,7 @@
 
 ### 快速开始
 
-- [下载源码]: https://github.com/Zyred9/OneBatis
+- 下载源码:  https://github.com/Zyred9/OneBatis
 
 - 使用 `maven` 安装 `jar` 到 本地 `maven` 仓库
 
