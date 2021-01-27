@@ -37,6 +37,7 @@ public class XmlParser {
     /**
      *  开始解析xml配置文件
      */
+    @SuppressWarnings("unchecked")
     public void parse() {
         try {
             // 使用SAX解析xml
@@ -81,6 +82,7 @@ public class XmlParser {
         }
     }
 
+
     private void parseTypeAliases(Element element) {
     }
 
@@ -88,6 +90,7 @@ public class XmlParser {
      * 解析 <mappers>节点，就是配置的 xxMapper.xml
      * @param mapper        mapper节点信息
      */
+    @SuppressWarnings("unchecked")
     private void parseMappers(Element mapper) {
         List<Element> elements = mapper.elements();
         List<String> arrResource = new ArrayList<>();
@@ -105,6 +108,7 @@ public class XmlParser {
      * dtd已经做了约束的
      * @param element   节点信息
      */
+    @SuppressWarnings("unchecked")
     private void parseEnvironments(Element element) {
         // 获取第二层节点集合
         List<Element> environments = element.elements();
@@ -154,6 +158,7 @@ public class XmlParser {
      * 解析 plugins 节点
      * @param element       节点信息
      */
+    @SuppressWarnings("unchecked")
     private void parsePlugins(Element element) {
         List<Element> plugins = element.elements();
         try {
@@ -186,6 +191,7 @@ public class XmlParser {
      * 解析settings节点， settings节点主要存放mybatis的一些开关项
      * @param element       节点信息
      */
+    @SuppressWarnings("unchecked")
     private void parseSettings(Element element) {
         // 拿到所有的子节点
         List<Element> settings = element.elements();
