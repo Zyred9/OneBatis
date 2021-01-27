@@ -107,4 +107,7 @@ public final class Configuration {
         return mapperRegistry;
     }
 
+    public DataSource getDataSource() {
+        return this.dataSource;
+    }
 }

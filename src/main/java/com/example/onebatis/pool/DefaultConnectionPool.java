@@ -79,20 +79,14 @@ public class DefaultConnectionPool implements ConnectionPool {
      */
     public DataSource createConnection(ResourceBundle properties) {
         String driverClassName = getProperties(properties, "jdbc.driver");
-        String userName = getProperties(properties,"jdbc.username");
-        String url = getProperties(properties,"jdbc.url");
-        String password = getProperties(properties,"jdbc.password");
-        String size = properties.getString("connection.size");
+        String size = getProperties(properties,"connection.size");
         int connectionSize = Integer.parseInt(size.equals("") ? DataSource.DEFAULT_POOL_SIZE : size);
         try {
             // 加载连接驱动
             Class.forName(driverClassName);
-            return new DataSource()
-                    .setDriver(driverClassName)
-                    .setPassword(password)
-                    .setUrl(url)
-                    .setUsername(userName)
-                    .setPoolSize(connectionSize);
+            DataSource dataSource = this.configuration.getDataSource();
+            dataSource.setPoolSize(connectionSize);
+            return dataSource;
         }catch (ClassNotFoundException ex){
             throw new RuntimeException("Loading driver failure, case: " + ex);
         }
@@ -106,11 +100,10 @@ public class DefaultConnectionPool implements ConnectionPool {
     private void init(){
         // 初始化连接池大小
         DataSource s = createConnection(this.configuration.getProperties());
-        this.configuration.setDataSource(s);
         pool = new LinkedList<>();
         try {
             for (int i = 0; i <= s.getPoolSize(); i++) {
-                pool.add(DriverManager.getConnection(s.getUrl(), s.getDriver(), s.getPassword()));
+                pool.add(DriverManager.getConnection(s.getUrl(), s.getUsername(), s.getPassword()));
             }
         }catch (SQLException ex) {
             throw new RuntimeException("Initialize the connection pool failure, case: " + ex);

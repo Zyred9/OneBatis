@@ -72,11 +72,10 @@ public class XmlParser {
                     default:
                         break;
                 }
-
-                // 初始化连接池
-                ConnectionPool pool = DefaultConnectionPool.getInstance(configuration);
-                this.configuration.setConnectionPool(pool);
             }
+            // 初始化连接池
+            ConnectionPool pool = DefaultConnectionPool.getInstance(configuration);
+            this.configuration.setConnectionPool(pool);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
