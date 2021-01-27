@@ -13,9 +13,15 @@ import java.util.ResourceBundle;
  **/
 public interface ConnectionPool {
 
+    /**
+     * 获取一个连接
+     * @return      连接对象
+     */
     Connection getConnection();
 
+    /**
+     * 关闭一个连接
+     * @param conn      连接对象
+     */
     void close(Connection conn);
-
-    Connection createConnection(ResourceBundle properties) throws ClassNotFoundException;
 }

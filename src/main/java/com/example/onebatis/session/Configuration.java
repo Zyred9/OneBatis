@@ -21,18 +21,27 @@ import java.util.*;
  **/
 public final class Configuration {
 
+    /** 全局缓存开关 **/
     private String cacheEnabled;
+    /** 日志实现类 **/
     private String logImpl;
+    /** 懒加载 **/
     private String lazyLoadingEnabled;
-    private List<Interceptor> interceptors = new ArrayList<>();
+    /** 拦截器，暂时未实现 **/
+    private final List<Interceptor> interceptors = new ArrayList<>();
+    /** 连接信息 **/
     private DataSource dataSource;
+    /** 其实这里面就包含了连接信息 **/
     private ResourceBundle properties;
+    /** 数据库连接池 **/
     private ConnectionPool connectionPool;
 
     /** statementId -> sql **/
-    private HashMap<String, SqlBuilder> sqlMapping = new HashMap<>();
-    private MapperRegistry mapperRegistry = new MapperRegistry(this);
+    private final HashMap<String, SqlBuilder> sqlMapping = new HashMap<>();
+    /** Mapper注册 **/
+    private final MapperRegistry mapperRegistry = new MapperRegistry(this);
 
+    /** sql拦截器，主要是插件才使用 **/
     public void addInterceptor(Interceptor i) {
         interceptors.add(i);
     }
@@ -72,9 +81,10 @@ public final class Configuration {
     /**
      * 初始化执行器和插件注入
      * @param autoCommit  自动注入
-     * @return
+     * @return            sql执行器
      */
     public Executor newExecutor(boolean autoCommit) {
+        // 简单sql执行器
         Executor ex = new SimpleExecutor(this, autoCommit);
         if (Objects.deepEquals(cacheEnabled, "true")){
             // 这里使用了装饰器模式，来增强执行器对象
@@ -96,4 +106,5 @@ public final class Configuration {
     public MapperRegistry getMapperRegistry() {
         return mapperRegistry;
     }
+
 }

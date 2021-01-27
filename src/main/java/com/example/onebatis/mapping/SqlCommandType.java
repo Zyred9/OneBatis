@@ -15,9 +15,13 @@
  */
 package com.example.onebatis.mapping;
 
+
 /**
- * @author Clinton Begin
- */
+ *  sql类型，枚举封装
+ * @author zyred
+ * @since 0.1
+ * </p>
+ **/
 public enum SqlCommandType {
   UNKNOWN, INSERT, UPDATE, DELETE, SELECT, FLUSH
 }

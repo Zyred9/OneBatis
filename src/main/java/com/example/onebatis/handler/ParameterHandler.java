@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * <p>
- * sql参数处理
+ *      sql参数处理
  * </p>
  *
  * @author zyred
@@ -16,7 +16,7 @@ import java.util.Set;
  **/
 public class ParameterHandler {
 
-    private PreparedStatement preparedStatement;
+    private final PreparedStatement preparedStatement;
 
     public ParameterHandler(PreparedStatement preparedStatement) {
         this.preparedStatement = preparedStatement;
@@ -24,8 +24,8 @@ public class ParameterHandler {
 
     /**
      * 从方法中获取参数，遍历设置SQL中的？占位符
-     *
-     * @param parameters
+     * @param parameters        sql参数
+     * @param mapping           映射关系
      */
     public void setParameters(Object[] parameters, LinkedHashMap<String, Class<?>> mapping) {
         try {

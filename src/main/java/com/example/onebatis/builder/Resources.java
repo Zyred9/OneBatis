@@ -2,7 +2,8 @@ package com.example.onebatis.builder;
 
 import cn.hutool.core.io.resource.ClassPathResource;
 
-import java.io.InputStream;
+import java.io.*;
+import java.net.URL;
 
 /**
  * <p>
@@ -14,8 +15,12 @@ import java.io.InputStream;
  **/
 public class Resources {
 
-    public static InputStream getResourceAsStream(String resource){
-
+    /**
+     * 通过 hutool 工具读取文件
+     * @param resource  文件路径
+     * @return      stream
+     */
+    public static InputStream getResourceAsStream(String resource) {
         return new ClassPathResource(resource).getStream();
     }
 

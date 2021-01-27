@@ -13,10 +13,7 @@ import java.util.Objects;
 public class ParseUtil {
 
     public static boolean revert(String bool) {
-        if (Objects.equals("true", bool)) {
-            return true;
-        }
-        return false;
+        return Objects.equals("true", bool);
     }
 
 }

@@ -19,18 +19,19 @@ import java.util.Map;
 public class CachingExecutor implements Executor {
 
 
-    private Executor delegate;
+    private final Executor delegate;
 
     /**
      * 查询缓存
      **/
-    private static Map<Integer, Object> cache = new HashMap<>();
+    private static final Map<Integer, Object> cache = new HashMap<>();
 
     public CachingExecutor(Executor delegate) {
         this.delegate = delegate;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> List<T> query(Object[] parameters, SqlBuilder sqlBuilder) {
         Integer cacheKey = createCacheKey(parameters, sqlBuilder);
         // 命中缓存

@@ -70,30 +70,27 @@
 
   ```xml
   <dependencies>
-      <dependency>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-          <version>4.13</version>
-          <scope>test</scope>
-      </dependency>
-  
+      <!-- 添加 mysql连接依赖 -->
       <dependency>
           <groupId>mysql</groupId>
           <artifactId>mysql-connector-java</artifactId>
           <version>8.0.21</version>
       </dependency>
   
+      <!-- 添加 onebatis 依赖 -->
       <dependency>
           <groupId>com.example</groupId>
           <artifactId>OneBatis</artifactId>
           <version>0.0.1-snapshot</version>
       </dependency>
+      
       <dependency>
           <groupId>junit</groupId>
           <artifactId>junit</artifactId>
           <version>4.12</version>
           <scope>compile</scope>
       </dependency>
+      
   </dependencies>
   ```
 

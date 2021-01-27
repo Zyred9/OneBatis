@@ -12,7 +12,7 @@ public interface SqlSessionFactory {
 
     /**
      *  打开一个session 会话
-     * @return
+     * @return  会话
      */
     SqlSession openSession();
 

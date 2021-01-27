@@ -18,7 +18,7 @@ public class ReflectUtil {
      * 获取元素的类型
      * @param target        目标类
      * @param property      属性名称
-     * @return
+     * @return              返回property在目标对象中的类型Class
      */
     public static Class<?> propertyType(Object target, String property) {
         if (Objects.isNull(target)) {

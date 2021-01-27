@@ -16,11 +16,13 @@ import lombok.Getter;
 @Getter
 public class SqlBuilder {
 
+    /** 方法名称 **/
     private String id;
 
     /** 这里不能存被new出来的对象，而是用的时候才去，否则会线程不安全 **/
     private String resultType;
 
+    /** 参数类型 **/
     private String parameterType;
 
     private boolean flushCache = false;

@@ -67,8 +67,7 @@ public class MapperRegistry {
             throw new RuntimeException("Type " + type + " is not known to the MapperRegistry.");
         }
         try {
-            T t = mapperProxyFactory.newInstance(sqlSession);
-            return t;
+            return mapperProxyFactory.newInstance(sqlSession);
         } catch (Exception e) {
             throw new RuntimeException("Error getting mapper instance. Cause: " + e, e);
         }

@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 /**
  * <p>
- * 解析XML
+ *  解析XML
  * </p>
  *
  * @author zyred
@@ -15,10 +15,11 @@ import java.io.InputStream;
  **/
 public class XmlConfigBuilder {
 
-    private Configuration configuration;
+    private final Configuration configuration;
 
     public XmlConfigBuilder(InputStream inputStream) {
         configuration = new Configuration();
+        // 创建一个 xml 解析器，通过输入流解析
         new XmlParser(inputStream, configuration).parse();
     }
 

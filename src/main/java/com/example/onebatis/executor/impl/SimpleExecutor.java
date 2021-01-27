@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <p>
- *          简单执行器
+ *          简单执行器，继承了最基础的执行器
  * </p>
  *
  * @author zyred
@@ -23,11 +23,13 @@ public class SimpleExecutor extends BaseExecutor {
 
     @Override
     public <T> List<T> query(Object[] parameters, SqlBuilder sqlBuilder) {
+        // 调用父类查询方法
         return super.query(parameters, sqlBuilder);
     }
 
     @Override
     public int update(Object[] parameters, SqlBuilder sqlBuilder) {
+        // 调用父类更新方法
         return super.update(parameters, sqlBuilder);
     }
 

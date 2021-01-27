@@ -6,17 +6,19 @@ import java.sql.Statement;
 import java.util.LinkedHashMap;
 
 /**
- * 动态 sql 处理
+ * 动态 sql 处理  只包含 CRUD 操作，不包含复杂sql拼接
  * <p>
  *
  * @author zyred
- * @since 0.1 只包含 CRUD 操作，不包含复杂sql拼接
+ * @since 0.1
  * </p>
  **/
 public class DynamicSqlNode {
 
+    /** sql **/
     private String sql;
-    private Object[] args;
+    /** 参数 **/
+    private final Object[] args;
     private static final String space_regex = " +";
     private static final String space = " ";
     private static final String holder_prefix = "#{";
@@ -25,7 +27,7 @@ public class DynamicSqlNode {
     private static final String holder = "?";
     private static final String final_holder = "#{?}";
 
-    // 这里可能会设计到线程安全问题
+    /** 这里可能会设计到线程安全问题 **/
     public LinkedHashMap<String, Class<?>> mapping = new LinkedHashMap<>();
 
     public DynamicSqlNode(String sql, Object[] args) {
@@ -35,11 +37,10 @@ public class DynamicSqlNode {
 
     /**
      * 解析占位符
-     *
-     * @return
+     * @return      解析后的sql，带占位符
      */
     public String parsePlaceholder() {
-        if (sql == null || sql == "") {
+        if (sql == null || sql.equals("")) {
             throw new RuntimeException("SQL can not be null : " + sql);
         }
         // 将多行sql 变成一行
@@ -70,14 +71,16 @@ public class DynamicSqlNode {
     /**
      * 解析属性的Java类型
      *
-     * @param properties
+     * @param properties        #{userName} -> userName(入参)
      */
     private void propertyClass(String properties) {
         for (Object arg : this.args) {
             if (isBaseDataType(arg.getClass())) {
                 continue;
             }
+            // 得到properties的类型
             Class<?> clazz = ReflectUtil.propertyType(arg, properties);
+            // 参数名称和类型的结果封装
             mapping.put(properties, clazz);
         }
     }
@@ -100,16 +103,6 @@ public class DynamicSqlNode {
             return true;
         } else if (target == Character.class){
             return true;
-        } else if (target == String.class){
-            return true;
-        }else {
-            return false;
-        }
+        } else return target == String.class;
     }
-
-
-    public static void main(String[] args) {
-
-    }
-
 }

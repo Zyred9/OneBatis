@@ -17,21 +17,33 @@ public class DataSource {
     private String password;
     private String url;
     private String driver;
+    private int poolSize;
+
+    public static final String DEFAULT_POOL_SIZE = "1";
 
 
-    public void setUsername(String username) {
+    public DataSource setUsername(String username) {
         this.username = username;
+        return this;
     }
 
-    public void setPassword(String password) {
+    public DataSource setPassword(String password) {
         this.password = password;
+        return this;
     }
 
-    public void setUrl(String url) {
+    public DataSource setUrl(String url) {
         this.url = url;
+        return this;
     }
 
-    public void setDriver(String driver) {
+    public DataSource setDriver(String driver) {
         this.driver = driver;
+        return this;
+    }
+
+    public DataSource setPoolSize(int poolSize) {
+        this.poolSize = poolSize;
+        return this;
     }
 }
