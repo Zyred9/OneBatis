@@ -202,6 +202,55 @@ connection.size=2
   User{id='4', userName='赵六', password='12346', address='杭州', phone='10086'}
   ```
 
+### 插件使用
+
+- 实现 `Interceptor` 接口
+
+```java
+@Interceptors(
+        @Signature(
+                type = Executor.class,
+                method = "query",
+            	// 这里的参数一定要和 Executor#query() 顺序和个数保持一致，在扫描阶段才能将其放入到 Invocation 对象中保存
+                args = {Object[].class, SqlBuilder.class}
+        )
+)
+public class MyInterceptor implements Interceptor {
+    
+    @Override
+    public Object intercept(Invocation invocation) throws Throwable {
+		
+        // invocation.getArgs()的个数和注解 @Signature的args 顺序一致，否则会类型转换异常
+        SqlBuilder sqlBuilder = (SqlBuilder)invocation.getArgs()[1];
+
+        String sql = sqlBuilder.getSql();
+        // 复写sql，拼接分页，注意这里的第一个空格
+        String suffix = " limit 2";
+        sqlBuilder.setSql(sql.concat(suffix));
+
+        // 执行动态代理过后的方法
+        return invocation.proceed();
+    }
+}
+```
+
+- 修改 `mybatis-config.xml` 文件，在 `plugin` 标签处新增一下内容
+
+```xml
+<plugins>
+    <plugin interceptor="com.example.onebatis.MyInterceptor">
+        <property name="onebatis" value="batis" />
+    </plugin>
+</plugins>
+```
+
+- 运行插件，得到结果（注意，此时我的数据库中有4条数据）
+
+```txt
+User{id='1', userName='张三', password='12346', address='北京', phone='10086'}
+User{id='2', userName='李四', password='12346', address='上海', phone='10086'}
+```
+
 #### mybatis-3 中文注释版地址
 
 - https://github.com/Zyred9/mybatis-3

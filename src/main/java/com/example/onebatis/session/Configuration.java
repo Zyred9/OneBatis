@@ -6,7 +6,8 @@ import com.example.onebatis.builder.SqlBuilder;
 import com.example.onebatis.executor.Executor;
 import com.example.onebatis.executor.impl.CachingExecutor;
 import com.example.onebatis.executor.impl.SimpleExecutor;
-import com.example.onebatis.interceptor.Interceptor;
+import com.example.onebatis.plugin.Interceptor;
+import com.example.onebatis.plugin.InterceptorChain;
 import com.example.onebatis.pool.ConnectionPool;
 
 import java.util.*;
@@ -27,14 +28,14 @@ public final class Configuration {
     private String logImpl;
     /** 懒加载 **/
     private String lazyLoadingEnabled;
-    /** 拦截器，暂时未实现 **/
-    private final List<Interceptor> interceptors = new ArrayList<>();
     /** 连接信息 **/
     private DataSource dataSource;
     /** 其实这里面就包含了连接信息 **/
     private ResourceBundle properties;
     /** 数据库连接池 **/
     private ConnectionPool connectionPool;
+    /** 插件 **/
+    private final InterceptorChain interceptorChain = new InterceptorChain();
 
     /** statementId -> sql **/
     private final HashMap<String, SqlBuilder> sqlMapping = new HashMap<>();
@@ -43,7 +44,7 @@ public final class Configuration {
 
     /** sql拦截器，主要是插件才使用 **/
     public void addInterceptor(Interceptor i) {
-        interceptors.add(i);
+        interceptorChain.addInterceptor(i);
     }
 
     public void setDataSource(DataSource dataSource) {
@@ -87,11 +88,12 @@ public final class Configuration {
         // 简单sql执行器
         Executor ex = new SimpleExecutor(this, autoCommit);
         if (Objects.deepEquals(cacheEnabled, "true")){
-            // 这里使用了装饰器模式，来增强执行器对象
+            // 这里使用了委托模式，来增强执行器对象
             ex = new CachingExecutor(ex);
         }
-        // 先放弃插件的注入，下一个版本再加入
-        // ex = (Executor) interceptorChain.pluginAll(ex);
+
+        // 通过动态代理，重新生成 executor
+        ex = (Executor) this.interceptorChain.pluginAll(ex);
         return ex;
     }
 

@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * <p>
- *
+ *      使用委托模式对执行器增强
  * </p>
  *
  * @author zyred

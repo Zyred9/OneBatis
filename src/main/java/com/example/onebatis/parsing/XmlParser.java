@@ -1,7 +1,7 @@
 package com.example.onebatis.parsing;
 
 import com.example.onebatis.DataSource;
-import com.example.onebatis.interceptor.Interceptor;
+import com.example.onebatis.plugin.Interceptor;
 import com.example.onebatis.pool.ConnectionPool;
 import com.example.onebatis.pool.DefaultConnectionPool;
 import com.example.onebatis.session.Configuration;
