@@ -19,7 +19,7 @@ public class DataSource {
     private String driver;
     private int poolSize;
 
-    public static final String DEFAULT_POOL_SIZE = "1";
+    public static final int DEFAULT_POOL_SIZE = 1;
 
 
     public DataSource setUsername(String username) {

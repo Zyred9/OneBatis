@@ -114,7 +114,7 @@ public class Plugin implements InvocationHandler, Serializable {
      * @param map               方法的签名
      * @return                  所有的实现接口
      */
-    private static Class<?>[] getAllInterfaces(Class<?> targetClazz, Map<Class<?>, Set<Method>> map){
+    private static Class<?>[] getAllInterfaces(Class<?> targetClazz, Map<Class<?>, Set<Method>> map) {
         Set<Class<?>> interfaces = new HashSet<>();
         while (targetClazz != null) {
             for (Class<?> clazz : targetClazz.getInterfaces()) {

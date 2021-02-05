@@ -52,26 +52,13 @@ public class XmlParser {
                     continue;
                 }
                 switch (element.getName()) {
-                    case "properties":
-                        parseProperties(element);
-                        break;
-                    case "settings":
-                        parseSettings(element);
-                        break;
-                    case "plugins":
-                        parsePlugins(element);
-                        break;
-                    case "environments":
-                        parseEnvironments(element);
-                        break;
-                    case "mappers":
-                        parseMappers(element);
-                        break;
-                    case "typeAliases":
-                        this.parseTypeAliases(element);
-                        break;
-                    default:
-                        break;
+                    case "properties":      this.parseProperties(element);      break;
+                    case "settings":        this.parseSettings(element);        break;
+                    case "plugins":         this.parsePlugins(element);         break;
+                    case "environments":    this.parseEnvironments(element);    break;
+                    case "mappers":         this.parseMappers(element);         break;
+                    case "typeAliases":     this.parseTypeAliases(element);     break;
+                    default:                                                    break;
                 }
             }
             // 初始化连接池
@@ -146,7 +133,8 @@ public class XmlParser {
                                 break;
                         }
                     }
-
+                    // 这里不需要再使用properties文件
+                    this.configuration.setProperties(null);
                     // 最后将读取到的内容放入全局配置文件中
                     this.configuration.setDataSource(dataSource);
                 }
@@ -201,6 +189,11 @@ public class XmlParser {
                 // 分别取 name value 属性
                 String name = setting.attribute("name").getValue();
                 String value = setting.attribute("value").getValue();
+                // 只针对日志操作
+                if (name.equals("logImpl")) {
+                    configuration.setLogImpl(value);
+                    continue;
+                }
                 Field field = configuration.getClass().getDeclaredField(name);
                 field.setAccessible(true);
                 // 使用反射装载到 全局配置文件中

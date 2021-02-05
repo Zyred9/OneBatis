@@ -6,11 +6,15 @@ import com.example.onebatis.builder.SqlBuilder;
 import com.example.onebatis.executor.Executor;
 import com.example.onebatis.executor.impl.CachingExecutor;
 import com.example.onebatis.executor.impl.SimpleExecutor;
+import com.example.onebatis.logging.Log;
 import com.example.onebatis.plugin.Interceptor;
 import com.example.onebatis.plugin.InterceptorChain;
 import com.example.onebatis.pool.ConnectionPool;
 
-import java.util.*;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * <p>
@@ -24,8 +28,8 @@ public final class Configuration {
 
     /** 全局缓存开关 **/
     private String cacheEnabled;
-    /** 日志实现类 **/
-    private String logImpl;
+    /** 日志实现类  com.example.onebatis.logging.stdout.StdOutImpl **/
+    private Log logger;
     /** 懒加载 **/
     private String lazyLoadingEnabled;
     /** 连接信息 **/
@@ -67,11 +71,11 @@ public final class Configuration {
         this.mapperRegistry.addMapper(clazz);
     }
 
-    public boolean hasMapper(Class<?> clazz){
+    public boolean hasMapper(Class<?> clazz) {
         return this.mapperRegistry.hasMapper(clazz);
     }
 
-    public boolean hasStatement(String statementId){
+    public boolean hasStatement(String statementId) {
         return this.sqlMapping.containsKey(statementId);
     }
 
@@ -81,13 +85,14 @@ public final class Configuration {
 
     /**
      * 初始化执行器和插件注入
-     * @param autoCommit  自动注入
-     * @return            sql执行器
+     *
+     * @param autoCommit 自动注入
+     * @return sql执行器
      */
     public Executor newExecutor(boolean autoCommit) {
         // 简单sql执行器
         Executor ex = new SimpleExecutor(this, autoCommit);
-        if (Objects.deepEquals(cacheEnabled, "true")){
+        if (Objects.deepEquals(cacheEnabled, "true")) {
             // 这里使用了委托模式，来增强执行器对象
             ex = new CachingExecutor(ex);
         }
@@ -97,11 +102,11 @@ public final class Configuration {
         return ex;
     }
 
-    public void setConnectionPool(ConnectionPool conn){
+    public void setConnectionPool(ConnectionPool conn) {
         this.connectionPool = conn;
     }
 
-    public ConnectionPool getConnectionPool(){
+    public ConnectionPool getConnectionPool() {
         return connectionPool;
     }
 
@@ -111,5 +116,20 @@ public final class Configuration {
 
     public DataSource getDataSource() {
         return this.dataSource;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public void setLogImpl(String logImpl) {
+        if (logImpl == null || logImpl.equals("")) {
+            return;
+        }
+        try {
+            Class<Log> implClazz = (Class<Log>) Class.forName(logImpl);
+            Constructor<Log> implConstructor = implClazz.getConstructor(String.class);
+            this.logger = implConstructor.newInstance("LogFactory");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

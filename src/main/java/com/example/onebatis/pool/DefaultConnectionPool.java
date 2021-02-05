@@ -74,17 +74,16 @@ public class DefaultConnectionPool implements ConnectionPool {
 
     /**
      * 读取数据库配置文件，初始化dataSource对象
-     * @param properties        数据库配置文件
+     * @param dataSource        数据库配置文件
      * @return                    DataSource
      */
-    public DataSource createConnection(ResourceBundle properties) {
-        String driverClassName = getProperties(properties, "jdbc.driver");
-        String size = getProperties(properties,"connection.size");
-        int connectionSize = Integer.parseInt(size.equals("") ? DataSource.DEFAULT_POOL_SIZE : size);
+    public DataSource createConnection(DataSource dataSource) {
+//        String driverClassName = getProperties(properties, "jdbc.driver");
+        int size = dataSource.getPoolSize();
+        int connectionSize = size == 0 ? DataSource.DEFAULT_POOL_SIZE : size;
         try {
             // 加载连接驱动
-            Class.forName(driverClassName);
-            DataSource dataSource = this.configuration.getDataSource();
+            Class.forName(dataSource.getDriver());
             dataSource.setPoolSize(connectionSize);
             return dataSource;
         }catch (ClassNotFoundException ex){
@@ -99,7 +98,7 @@ public class DefaultConnectionPool implements ConnectionPool {
 
     private void init(){
         // 初始化连接池大小
-        DataSource s = createConnection(this.configuration.getProperties());
+        DataSource s = createConnection(this.configuration.getDataSource());
         pool = new LinkedList<>();
         try {
             for (int i = 0; i <= s.getPoolSize(); i++) {

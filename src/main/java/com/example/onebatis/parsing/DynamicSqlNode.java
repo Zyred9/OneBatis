@@ -65,7 +65,10 @@ public class DynamicSqlNode {
                 sb.append(element);
             }
         }
-        return sb.toString();
+        String preparSql = sb.toString();
+        // sql 日志记录  TODO
+        System.out.println("==>  Preparing: " + preparSql);
+        return preparSql;
     }
 
     /**

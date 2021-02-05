@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,20 +30,35 @@ public class ResultSetHandler {
     public <T> List<T> handlerResult(Class<?> pojoClazz, ResultSet resultSet) {
         try {
             // 结果
+            Field[] pojoFields = pojoClazz.getDeclaredFields();
+            String[] cloumns = new String[pojoFields.length];
+            List<String[]> listRows = new ArrayList<>(resultSet.getRow());
             List<T> result = new ArrayList<>();
+            int pre = 0;
             while(resultSet.next()){
+                String[] rows = new String[pojoFields.length];
                 // 这里通过反射获取返回值类型实例
                 T instance = (T) pojoClazz.newInstance();
                 // 使用反射，为每一个属性赋值
-                Field[] pojoFields = instance.getClass().getDeclaredFields();
+                int i = 0;
                 for (Field field : pojoFields) {
                     field.setAccessible(true);
+                    if (pre == 0) {
+                        cloumns[i] = field.getName();
+                    }
+
                     Object fieldValue = getResult(resultSet, field);
+                    rows[i] = String.valueOf(fieldValue);
                     field.set(instance, fieldValue);
                     field.setAccessible(false);
+                    i ++;
                 }
                 result.add(instance);
+                listRows.add(rows);
+                pre ++;
             }
+
+            log(cloumns, listRows);
             return result;
         } catch (InstantiationException | IllegalAccessException | SQLException ex) {
             throw new RuntimeException("Query result mapping error." + ex);
@@ -92,4 +108,10 @@ public class ResultSetHandler {
         return sb.toString().toUpperCase();
     }
 
+    private static void log(String[] columns, List<String[]> listRows){
+        System.out.println("<==    Columns: " + Arrays.toString(columns));
+        for (String[] row : listRows) {
+            System.out.println("<==        Row: " + Arrays.toString(row));
+        }
+    }
 }
